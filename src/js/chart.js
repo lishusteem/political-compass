@@ -7,20 +7,21 @@
     var width = canvas.width = canvas.parentNode.clientWidth;
     var padding = 0;
     context.clearRect(0, 0, width, height);
-    context.font = '16px sans-serif';
+    context.font = '20px sans-serif';
     drawGrid(width, height, 40, padding, '#eee', 1);
     drawGrid(width, height, 10, padding, '#eee', 2);
     var labels = [
-      { text: 'Communism', horizontal: 'left', vertical: 'top', x: 0, y: 0 },
-      { text: 'Authoritarianism', horizontal: 'center',vertical: 'top', x: width / 2, y: 0 },
-      { text: 'Fascism', horizontal: 'right', vertical: 'top', x: width, y: 0 },
-      { text: 'Socialism', horizontal: 'left', vertical: 'middle', x: 0, y: height / 2 },
+      { text: '', horizontal: 'left', vertical: 'top', x: 0, y: 0 },
+      { text: 'Public Good', horizontal: 'center',vertical: 'top', x: width / 2, y: 0 },
+      { text: '', horizontal: 'right', vertical: 'top', x: width, y: 0 },
+      { text: 'Decentralized', horizontal: 'left', vertical: 'middle', x: 0, y: height / 2 },
       // { text: 'Centerism', horizontal: 'center', vertical: 'middle', x: width / 2, y: height / 2 },
-      { text: 'Capitalism', horizontal: 'right', vertical: 'middle', x: width, y: height / 2 },
-      { text: 'Collectivism', horizontal: 'left', vertical: 'bottom', x: 0, y: height },
-      { text: 'Libertarianism', horizontal: 'center', vertical: 'bottom', x: width / 2, y: height },
-      { text: 'Individualism', horizontal: 'right', vertical: 'bottom', x: width, y: height },
+      { text: 'Centralized', horizontal: 'right', vertical: 'middle', x: width, y: height / 2 },
+      { text: '', horizontal: 'left', vertical: 'bottom', x: 0, y: height },
+      { text: 'Private Good', horizontal: 'center', vertical: 'bottom', x: width / 2, y: height },
+      { text: '', horizontal: 'right', vertical: 'bottom', x: width, y: height },
     ];
+    drawAxes(width, height, 3, '#2a9d8f', 30); // 2 is lineWidth, '#333' is the color, and 20 is arrowOffset
     labels.forEach(function(label) {
       drawText(label, 10);
     });
@@ -50,6 +51,47 @@
     context.lineTo(end.x, end.y);
     context.stroke();
     context.closePath();
+  }
+
+  function drawAxes(width, height, lineWidth, color, arrowSize) {
+    var centerX = width / 2;
+    var centerY = height / 2;
+    context.lineWidth = lineWidth;
+    context.strokeStyle = color;
+    context.fillStyle = color;
+  
+    // Draw the x-axis
+    context.beginPath();
+    context.moveTo(arrowSize, centerY);
+    context.lineTo(width - arrowSize, centerY);
+    context.stroke();
+    context.closePath();
+  
+    // Draw the y-axis
+    context.beginPath();
+    context.moveTo(centerX, arrowSize);
+    context.lineTo(centerX, height - arrowSize);
+    context.stroke();
+    context.closePath();
+  
+    // Draw arrows
+    function drawArrow(x, y, angle) {
+      context.save();
+      context.translate(x, y);
+      context.rotate(angle);
+      context.beginPath();
+      context.moveTo(0, 0);
+      context.lineTo(-arrowSize, arrowSize / 2);
+      context.lineTo(-arrowSize, -arrowSize / 2);
+      context.closePath();
+      context.fill();
+      context.restore();
+    }
+  
+    drawArrow(width - arrowSize, centerY, 0); // right arrow
+    drawArrow(arrowSize, centerY, Math.PI); // left arrow
+    drawArrow(centerX, arrowSize, -Math.PI / 2); // top arrow
+    drawArrow(centerX, height - arrowSize, Math.PI / 2); // bottom arrow
   }
 
   function drawText(item, pad) {
